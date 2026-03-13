@@ -11,45 +11,22 @@
       background: #fff;
       color: #000;
       font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
-    /* ── Toolbar ── */
-    #toolbar {
+    /* ── Top bar: typeface only ── */
+    #topbar {
+      height: 40px;
+      border-bottom: 1px solid #e8e8e8;
       display: flex;
       align-items: center;
-      gap: 0;
-      border-bottom: 1px solid #e0e0e0;
-      padding: 0;
-      height: 44px;
-      flex-shrink: 0;
-      overflow-x: auto;
-    }
-
-    .tool-group {
-      display: flex;
-      align-items: center;
-      height: 100%;
-      padding: 0 16px;
-      gap: 8px;
-      border-right: 1px solid #e0e0e0;
+      padding: 0 20px;
       flex-shrink: 0;
     }
 
-    .tool-group:last-child { border-right: none; }
-
-    .tool-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #999;
-      white-space: nowrap;
-      user-select: none;
-    }
-
-    /* Typeface selector */
     #typeface-select {
       font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
       font-size: 13px;
@@ -58,133 +35,100 @@
       background: transparent;
       color: #000;
       cursor: pointer;
-      padding: 0;
-      max-width: 200px;
     }
-
-    /* Spinners for size / tracking / leading */
-    .spinner {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      overflow: hidden;
-      height: 26px;
-    }
-
-    .spinner input[type="number"] {
-      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-      font-size: 12px;
-      width: 52px;
-      border: none;
-      outline: none;
-      text-align: center;
-      padding: 0 4px;
-      -moz-appearance: textfield;
-      background: transparent;
-      color: #000;
-    }
-
-    .spinner input[type="number"]::-webkit-outer-spin-button,
-    .spinner input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-
-    .spinner-btn {
-      background: #f5f5f5;
-      border: none;
-      border-left: 1px solid #ddd;
-      width: 22px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 11px;
-      color: #555;
-      user-select: none;
-      flex-shrink: 0;
-    }
-
-    .spinner-btn:hover { background: #eee; }
-    .spinner-btn:first-child { border-left: none; border-right: 1px solid #ddd; }
 
     /* ── Canvas ── */
     #canvas {
       flex: 1;
-      padding: 80px 120px;
+      padding: 60px 80px;
       outline: none;
       white-space: pre-wrap;
       word-break: break-word;
-      line-height: 1.2;
       caret-color: #000;
-      min-height: 0;
       overflow-y: auto;
     }
 
     #canvas:empty::before {
       content: attr(data-placeholder);
-      color: #bbb;
+      color: #ccc;
       pointer-events: none;
     }
 
-    /* ── Status bar ── */
-    #statusbar {
-      height: 28px;
-      border-top: 1px solid #e0e0e0;
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      gap: 24px;
+    /* ── Control panel ── */
+    #controls {
       flex-shrink: 0;
+      padding: 20px 24px 24px;
+      display: flex;
+      justify-content: center;
     }
 
-    .status-item {
-      font-size: 10px;
-      color: #aaa;
-      letter-spacing: 0.05em;
+    .panel {
+      background: #F0F000;
+      border-radius: 14px;
+      padding: 14px 20px;
+      width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 64px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slider-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #000;
+      white-space: nowrap;
+    }
+
+    /* Custom range slider */
+    .slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 1px;
+      background: #000;
+      outline: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #000;
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #000;
+      border: none;
+      cursor: pointer;
+    }
+
+    .slider-value {
+      font-size: 14px;
+      color: #000;
+      text-align: right;
+      white-space: nowrap;
     }
   </style>
 </head>
 <body>
 
-<div id="toolbar">
-  <!-- Typeface -->
-  <div class="tool-group">
-    <span class="tool-label">Typeface</span>
-    <select id="typeface-select"><option value="">Loading...</option></select>
-  </div>
-
-  <!-- Size -->
-  <div class="tool-group">
-    <span class="tool-label">Size</span>
-    <div class="spinner">
-      <button class="spinner-btn" data-target="size" data-dir="-1">−</button>
-      <input type="number" id="size" value="64" min="6" max="400" />
-      <button class="spinner-btn" data-target="size" data-dir="1">+</button>
-    </div>
-    <span class="tool-label">px</span>
-  </div>
-
-  <!-- Tracking -->
-  <div class="tool-group">
-    <span class="tool-label">Tracking</span>
-    <div class="spinner">
-      <button class="spinner-btn" data-target="tracking" data-dir="-10">−</button>
-      <input type="number" id="tracking" value="0" min="-200" max="1000" step="10" />
-      <button class="spinner-btn" data-target="tracking" data-dir="10">+</button>
-    </div>
-    <span class="tool-label">em/1000</span>
-  </div>
-
-  <!-- Leading -->
-  <div class="tool-group">
-    <span class="tool-label">Leading</span>
-    <div class="spinner">
-      <button class="spinner-btn" data-target="leading" data-dir="-0.05">−</button>
-      <input type="number" id="leading" value="1.20" min="0.5" max="4" step="0.05" />
-      <button class="spinner-btn" data-target="leading" data-dir="0.05">+</button>
-    </div>
-  </div>
+<div id="topbar">
+  <select id="typeface-select"><option value="">Loading…</option></select>
 </div>
 
 <div
@@ -194,125 +138,80 @@
   data-placeholder="Start typing…"
 ></div>
 
-<div id="statusbar">
-  <span class="status-item" id="status-font">—</span>
-  <span class="status-item" id="status-chars">0 characters</span>
-  <span class="status-item" id="status-words">0 words</span>
+<div id="controls">
+  <div class="panel">
+    <div class="slider-row">
+      <span class="slider-label">Size</span>
+      <input class="slider" type="range" id="size" min="8" max="200" value="64" step="1" />
+      <span class="slider-value" id="size-val">64 pt</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Leading</span>
+      <input class="slider" type="range" id="leading" min="50" max="200" value="120" step="1" />
+      <span class="slider-value" id="leading-val">120 %</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Spacing</span>
+      <input class="slider" type="range" id="spacing" min="-10" max="30" value="0" step="1" />
+      <span class="slider-value" id="spacing-val">0 %</span>
+    </div>
+  </div>
 </div>
 
 <script>
-  // ── State ──────────────────────────────────────────────
   let fonts = [];
   const canvas = document.getElementById('canvas');
 
-  // ── Load fonts ─────────────────────────────────────────
   async function init() {
     try {
       const res = await fetch('./fonts.json');
       fonts = await res.json();
-    } catch {
-      fonts = [];
-    }
+    } catch { fonts = []; }
 
-    // Inject @font-face
     if (fonts.length) {
       const style = document.createElement('style');
       style.textContent = fonts.map(f =>
-        `@font-face { font-family: "${f.name}"; src: url("./fonts/${f.file}"); }`
+        `@font-face { font-family: "${f.name}"; src: url("./fonts/${encodeURIComponent(f.file)}"); }`
       ).join('\n');
       document.head.appendChild(style);
     }
 
-    // Populate typeface dropdown
     const sel = document.getElementById('typeface-select');
     sel.innerHTML = '';
-
-    // System fallback always first
-    const sys = document.createElement('option');
-    sys.value = '__system__';
-    sys.textContent = 'System Default';
-    sel.appendChild(sys);
-
     fonts.forEach(f => {
       const opt = document.createElement('option');
       opt.value = f.name;
       opt.textContent = f.name;
       sel.appendChild(opt);
     });
-
     if (fonts.length) sel.value = fonts[0].name;
+
     applyStyles();
+    canvas.focus();
   }
 
-  // ── Apply canvas styles ────────────────────────────────
   function applyStyles() {
-    const face = document.getElementById('typeface-select').value;
-    const size = parseFloat(document.getElementById('size').value) || 64;
-    const tracking = parseFloat(document.getElementById('tracking').value) || 0;
-    const leading = parseFloat(document.getElementById('leading').value) || 1.2;
+    const face    = document.getElementById('typeface-select').value;
+    const size    = parseInt(document.getElementById('size').value);
+    const leading = parseInt(document.getElementById('leading').value);
+    const spacing = parseInt(document.getElementById('spacing').value);
 
-    canvas.style.fontFamily = face === '__system__' ? 'system-ui, sans-serif' : `"${face}", serif`;
-    canvas.style.fontSize   = size + 'px';
-    canvas.style.letterSpacing = (tracking / 1000) + 'em';
-    canvas.style.lineHeight = leading;
+    canvas.style.fontFamily    = `"${face}", serif`;
+    canvas.style.fontSize      = size + 'px';
+    canvas.style.lineHeight    = (leading / 100).toFixed(2);
+    canvas.style.letterSpacing = (spacing / 100).toFixed(3) + 'em';
 
-    document.getElementById('status-font').textContent =
-      face === '__system__' ? 'System Default' : face;
+    document.getElementById('size-val').textContent    = size + ' pt';
+    document.getElementById('leading-val').textContent = leading + ' %';
+    document.getElementById('spacing-val').textContent = spacing + ' %';
   }
 
-  // ── Spinner buttons ────────────────────────────────────
-  document.querySelectorAll('.spinner-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id  = btn.dataset.target;
-      const dir = parseFloat(btn.dataset.dir);
-      const inp = document.getElementById(id);
-      const val = parseFloat(inp.value) + dir;
-      inp.value = +val.toFixed(4);
-      applyStyles();
-    });
-  });
-
-  // ── Direct input on spinners ───────────────────────────
-  ['size','tracking','leading'].forEach(id => {
-    document.getElementById(id).addEventListener('input', applyStyles);
-    document.getElementById(id).addEventListener('wheel', function(e) {
-      e.preventDefault();
-      const step = parseFloat(this.step) || 1;
-      const dir  = e.deltaY < 0 ? step : -step;
-      this.value = +(parseFloat(this.value) + dir).toFixed(4);
-      applyStyles();
-    }, { passive: false });
-  });
-
-  // ── Typeface change ────────────────────────────────────
   document.getElementById('typeface-select').addEventListener('change', applyStyles);
+  document.getElementById('size').addEventListener('input', applyStyles);
+  document.getElementById('leading').addEventListener('input', applyStyles);
+  document.getElementById('spacing').addEventListener('input', applyStyles);
 
-  // ── Keyboard shortcuts ─────────────────────────────────
-  document.addEventListener('keydown', e => {
-    if (e.target === canvas) return; // don't intercept typing
-    if ((e.metaKey || e.ctrlKey) && e.key === ']') {
-      const inp = document.getElementById('size');
-      inp.value = +inp.value + 1;
-      applyStyles(); e.preventDefault();
-    }
-    if ((e.metaKey || e.ctrlKey) && e.key === '[') {
-      const inp = document.getElementById('size');
-      inp.value = Math.max(6, +inp.value - 1);
-      applyStyles(); e.preventDefault();
-    }
-  });
-
-  // ── Word / char count ──────────────────────────────────
-  canvas.addEventListener('input', () => {
-    const text = canvas.innerText.trim();
-    const chars = canvas.innerText.length;
-    const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
-    document.getElementById('status-chars').textContent = chars + ' character' + (chars !== 1 ? 's' : '');
-    document.getElementById('status-words').textContent = words + ' word' + (words !== 1 ? 's' : '');
-  });
-
-  // ── Focus canvas on load ───────────────────────────────
-  init().then(() => canvas.focus());
+  init();
 </script>
 </body>
 </html>
