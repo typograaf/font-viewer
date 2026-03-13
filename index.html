@@ -7,443 +7,312 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg: #0f0f0f;
-      --surface: #1a1a1a;
-      --surface2: #222;
-      --border: #333;
-      --text: #e8e8e8;
-      --muted: #888;
-      --accent: #7c6af7;
-      --accent-hover: #9b8fff;
-    }
-
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, sans-serif;
+      background: #fff;
+      color: #000;
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    header {
-      padding: 20px 32px;
-      border-bottom: 1px solid var(--border);
+    /* ── Toolbar ── */
+    #toolbar {
       display: flex;
       align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
+      gap: 0;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 0;
+      height: 44px;
+      flex-shrink: 0;
+      overflow-x: auto;
     }
 
-    header h1 {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-left: auto;
-    }
-
-    .size-control {
+    .tool-group {
       display: flex;
       align-items: center;
+      height: 100%;
+      padding: 0 16px;
       gap: 8px;
-      color: var(--muted);
-      font-size: 13px;
+      border-right: 1px solid #e0e0e0;
+      flex-shrink: 0;
     }
 
-    input[type="range"] {
-      accent-color: var(--accent);
-      width: 100px;
-    }
+    .tool-group:last-child { border-right: none; }
 
-    .filter-input {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 7px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      outline: none;
-      width: 180px;
-    }
-
-    .filter-input:focus { border-color: var(--accent); }
-
-    select {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 7px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    select:focus { border-color: var(--accent); }
-
-    .preview-bar {
-      padding: 16px 32px;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-    }
-
-    .preview-bar textarea {
-      width: 100%;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-size: 15px;
-      resize: none;
-      outline: none;
-      font-family: system-ui, sans-serif;
-      line-height: 1.5;
-    }
-
-    .preview-bar textarea::placeholder { color: var(--muted); }
-
-    .font-count {
-      font-size: 12px;
-      color: var(--muted);
-      padding: 10px 32px;
-    }
-
-    .font-grid {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      padding: 0 32px 32px;
-      gap: 2px;
-    }
-
-    .font-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px 24px;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .font-card:hover { border-color: var(--accent); background: var(--surface2); }
-    .font-card.active { border-color: var(--accent); background: var(--surface2); }
-
-    .font-meta {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-    }
-
-    .font-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
+    .tool-label {
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .font-category {
-      font-size: 11px;
-      color: var(--border);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .font-preview {
-      line-height: 1.3;
-      overflow: hidden;
+      letter-spacing: 0.08em;
+      color: #999;
       white-space: nowrap;
-      text-overflow: ellipsis;
+      user-select: none;
     }
 
-    .detail-panel {
-      position: fixed;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 420px;
-      background: var(--surface);
-      border-left: 1px solid var(--border);
-      padding: 28px;
+    /* Typeface selector */
+    #typeface-select {
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #000;
+      cursor: pointer;
+      padding: 0;
+      max-width: 200px;
+    }
+
+    /* Spinners for size / tracking / leading */
+    .spinner {
       display: flex;
-      flex-direction: column;
-      gap: 20px;
-      transform: translateX(100%);
-      transition: transform 0.2s ease;
-      z-index: 100;
+      align-items: center;
+      gap: 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      height: 26px;
+    }
+
+    .spinner input[type="number"] {
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+      font-size: 12px;
+      width: 52px;
+      border: none;
+      outline: none;
+      text-align: center;
+      padding: 0 4px;
+      -moz-appearance: textfield;
+      background: transparent;
+      color: #000;
+    }
+
+    .spinner input[type="number"]::-webkit-outer-spin-button,
+    .spinner input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    .spinner-btn {
+      background: #f5f5f5;
+      border: none;
+      border-left: 1px solid #ddd;
+      width: 22px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 11px;
+      color: #555;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .spinner-btn:hover { background: #eee; }
+    .spinner-btn:first-child { border-left: none; border-right: 1px solid #ddd; }
+
+    /* ── Canvas ── */
+    #canvas {
+      flex: 1;
+      padding: 80px 120px;
+      outline: none;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.2;
+      caret-color: #000;
+      min-height: 0;
       overflow-y: auto;
     }
 
-    .detail-panel.open { transform: translateX(0); }
-
-    .detail-panel h2 { font-size: 20px; font-weight: 600; }
-    .detail-panel .detail-category { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 20px;
-      cursor: pointer;
-      line-height: 1;
-      padding: 4px 8px;
-      border-radius: 4px;
+    #canvas:empty::before {
+      content: attr(data-placeholder);
+      color: #bbb;
+      pointer-events: none;
     }
 
-    .close-btn:hover { background: var(--border); color: var(--text); }
-
-    .detail-type-area {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      min-height: 120px;
-    }
-
-    .detail-type-area [contenteditable] {
-      outline: none;
-      line-height: 1.5;
-      min-height: 80px;
-      display: block;
-    }
-
-    .detail-size-control {
+    /* ── Status bar ── */
+    #statusbar {
+      height: 28px;
+      border-top: 1px solid #e0e0e0;
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: var(--muted);
+      padding: 0 16px;
+      gap: 24px;
+      flex-shrink: 0;
     }
 
-    .detail-size-control input[type="range"] { flex: 1; }
-
-    .alphabet-section h3 {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-    }
-
-    .alphabet-block {
-      line-height: 1.8;
-      word-break: break-all;
-    }
-
-    .loading {
-      padding: 60px 32px;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    .error-msg {
-      background: #2a1515;
-      border: 1px solid #5a2020;
-      color: #ff8080;
-      padding: 12px 16px;
-      border-radius: 6px;
-      font-size: 13px;
-      margin: 16px 32px;
+    .status-item {
+      font-size: 10px;
+      color: #aaa;
+      letter-spacing: 0.05em;
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>Font Viewer</h1>
-  <div class="controls">
-    <input class="filter-input" type="text" id="search" placeholder="Search fonts..." />
-    <select id="category-filter">
-      <option value="">All categories</option>
-    </select>
-    <div class="size-control">
-      <span>Size</span>
-      <input type="range" id="font-size" min="12" max="72" value="32" />
-      <span id="size-label">32px</span>
+<div id="toolbar">
+  <!-- Typeface -->
+  <div class="tool-group">
+    <span class="tool-label">Typeface</span>
+    <select id="typeface-select"><option value="">Loading...</option></select>
+  </div>
+
+  <!-- Size -->
+  <div class="tool-group">
+    <span class="tool-label">Size</span>
+    <div class="spinner">
+      <button class="spinner-btn" data-target="size" data-dir="-1">−</button>
+      <input type="number" id="size" value="64" min="6" max="400" />
+      <button class="spinner-btn" data-target="size" data-dir="1">+</button>
+    </div>
+    <span class="tool-label">px</span>
+  </div>
+
+  <!-- Tracking -->
+  <div class="tool-group">
+    <span class="tool-label">Tracking</span>
+    <div class="spinner">
+      <button class="spinner-btn" data-target="tracking" data-dir="-10">−</button>
+      <input type="number" id="tracking" value="0" min="-200" max="1000" step="10" />
+      <button class="spinner-btn" data-target="tracking" data-dir="10">+</button>
+    </div>
+    <span class="tool-label">em/1000</span>
+  </div>
+
+  <!-- Leading -->
+  <div class="tool-group">
+    <span class="tool-label">Leading</span>
+    <div class="spinner">
+      <button class="spinner-btn" data-target="leading" data-dir="-0.05">−</button>
+      <input type="number" id="leading" value="1.20" min="0.5" max="4" step="0.05" />
+      <button class="spinner-btn" data-target="leading" data-dir="0.05">+</button>
     </div>
   </div>
-</header>
-
-<div class="preview-bar">
-  <textarea id="preview-text" rows="2" placeholder="Type something to preview all fonts...">The quick brown fox jumps over the lazy dog</textarea>
 </div>
 
-<div class="font-count" id="font-count"></div>
-<div class="font-grid" id="font-grid"><div class="loading">Loading fonts...</div></div>
+<div
+  id="canvas"
+  contenteditable="true"
+  spellcheck="false"
+  data-placeholder="Start typing…"
+></div>
 
-<div class="detail-panel" id="detail-panel">
-  <button class="close-btn" id="close-detail">✕</button>
-  <div>
-    <div class="detail-category" id="detail-category"></div>
-    <h2 id="detail-name"></h2>
-  </div>
-  <div class="detail-size-control">
-    <span>Size</span>
-    <input type="range" id="detail-font-size" min="12" max="120" value="48" />
-    <span id="detail-size-label">48px</span>
-  </div>
-  <div class="detail-type-area">
-    <div contenteditable="true" id="detail-typing" spellcheck="false"></div>
-  </div>
-  <div class="alphabet-section">
-    <h3>Uppercase</h3>
-    <div class="alphabet-block" id="detail-upper"></div>
-  </div>
-  <div class="alphabet-section">
-    <h3>Lowercase</h3>
-    <div class="alphabet-block" id="detail-lower"></div>
-  </div>
-  <div class="alphabet-section">
-    <h3>Numerals &amp; Punctuation</h3>
-    <div class="alphabet-block" id="detail-misc"></div>
-  </div>
+<div id="statusbar">
+  <span class="status-item" id="status-font">—</span>
+  <span class="status-item" id="status-chars">0 characters</span>
+  <span class="status-item" id="status-words">0 words</span>
 </div>
 
 <script>
-  const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const LOWER = 'abcdefghijklmnopqrstuvwxyz';
-  const MISC  = '0123456789 !@#$%&*()[]{}.,;:\'"?/\\-_=+';
-
+  // ── State ──────────────────────────────────────────────
   let fonts = [];
-  let activeFont = null;
+  const canvas = document.getElementById('canvas');
 
-  // Load fonts.json and inject @font-face rules
-  async function loadFonts() {
+  // ── Load fonts ─────────────────────────────────────────
+  async function init() {
     try {
       const res = await fetch('./fonts.json');
-      if (!res.ok) throw new Error('Could not load fonts.json');
       fonts = await res.json();
-    } catch (e) {
-      document.getElementById('font-grid').innerHTML =
-        `<div class="error-msg">Failed to load fonts.json: ${e.message}</div>`;
-      return;
+    } catch {
+      fonts = [];
     }
 
-    const style = document.createElement('style');
-    style.textContent = fonts.map(f =>
-      `@font-face { font-family: "${f.name}"; src: url("./fonts/${f.file}"); }`
-    ).join('\n');
-    document.head.appendChild(style);
+    // Inject @font-face
+    if (fonts.length) {
+      const style = document.createElement('style');
+      style.textContent = fonts.map(f =>
+        `@font-face { font-family: "${f.name}"; src: url("./fonts/${f.file}"); }`
+      ).join('\n');
+      document.head.appendChild(style);
+    }
 
-    populateCategoryFilter();
-    renderGrid(fonts);
-  }
+    // Populate typeface dropdown
+    const sel = document.getElementById('typeface-select');
+    sel.innerHTML = '';
 
-  function populateCategoryFilter() {
-    const cats = [...new Set(fonts.map(f => f.category).filter(Boolean))].sort();
-    const sel = document.getElementById('category-filter');
-    cats.forEach(c => {
+    // System fallback always first
+    const sys = document.createElement('option');
+    sys.value = '__system__';
+    sys.textContent = 'System Default';
+    sel.appendChild(sys);
+
+    fonts.forEach(f => {
       const opt = document.createElement('option');
-      opt.value = c; opt.textContent = c;
+      opt.value = f.name;
+      opt.textContent = f.name;
       sel.appendChild(opt);
     });
+
+    if (fonts.length) sel.value = fonts[0].name;
+    applyStyles();
   }
 
-  function renderGrid(list) {
-    const previewText = document.getElementById('preview-text').value || 'The quick brown fox jumps over the lazy dog';
-    const size = document.getElementById('font-size').value;
-    const grid = document.getElementById('font-grid');
-    document.getElementById('font-count').textContent = `${list.length} font${list.length !== 1 ? 's' : ''}`;
+  // ── Apply canvas styles ────────────────────────────────
+  function applyStyles() {
+    const face = document.getElementById('typeface-select').value;
+    const size = parseFloat(document.getElementById('size').value) || 64;
+    const tracking = parseFloat(document.getElementById('tracking').value) || 0;
+    const leading = parseFloat(document.getElementById('leading').value) || 1.2;
 
-    if (list.length === 0) {
-      grid.innerHTML = '<div class="loading">No fonts match your search.</div>';
-      return;
+    canvas.style.fontFamily = face === '__system__' ? 'system-ui, sans-serif' : `"${face}", serif`;
+    canvas.style.fontSize   = size + 'px';
+    canvas.style.letterSpacing = (tracking / 1000) + 'em';
+    canvas.style.lineHeight = leading;
+
+    document.getElementById('status-font').textContent =
+      face === '__system__' ? 'System Default' : face;
+  }
+
+  // ── Spinner buttons ────────────────────────────────────
+  document.querySelectorAll('.spinner-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id  = btn.dataset.target;
+      const dir = parseFloat(btn.dataset.dir);
+      const inp = document.getElementById(id);
+      const val = parseFloat(inp.value) + dir;
+      inp.value = +val.toFixed(4);
+      applyStyles();
+    });
+  });
+
+  // ── Direct input on spinners ───────────────────────────
+  ['size','tracking','leading'].forEach(id => {
+    document.getElementById(id).addEventListener('input', applyStyles);
+    document.getElementById(id).addEventListener('wheel', function(e) {
+      e.preventDefault();
+      const step = parseFloat(this.step) || 1;
+      const dir  = e.deltaY < 0 ? step : -step;
+      this.value = +(parseFloat(this.value) + dir).toFixed(4);
+      applyStyles();
+    }, { passive: false });
+  });
+
+  // ── Typeface change ────────────────────────────────────
+  document.getElementById('typeface-select').addEventListener('change', applyStyles);
+
+  // ── Keyboard shortcuts ─────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.target === canvas) return; // don't intercept typing
+    if ((e.metaKey || e.ctrlKey) && e.key === ']') {
+      const inp = document.getElementById('size');
+      inp.value = +inp.value + 1;
+      applyStyles(); e.preventDefault();
     }
-
-    grid.innerHTML = '';
-    list.forEach(f => {
-      const card = document.createElement('div');
-      card.className = 'font-card' + (activeFont?.name === f.name ? ' active' : '');
-      card.innerHTML = `
-        <div class="font-meta">
-          <span class="font-name">${f.name}</span>
-          ${f.category ? `<span class="font-category">${f.category}</span>` : ''}
-        </div>
-        <div class="font-preview" style="font-family:'${f.name}',serif; font-size:${size}px">${escHtml(previewText)}</div>
-      `;
-      card.addEventListener('click', () => openDetail(f));
-      grid.appendChild(card);
-    });
-  }
-
-  function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  function filtered() {
-    const q = document.getElementById('search').value.toLowerCase();
-    const cat = document.getElementById('category-filter').value;
-    return fonts.filter(f =>
-      (!q || f.name.toLowerCase().includes(q)) &&
-      (!cat || f.category === cat)
-    );
-  }
-
-  function openDetail(f) {
-    activeFont = f;
-    const panel = document.getElementById('detail-panel');
-    panel.classList.add('open');
-
-    document.getElementById('detail-name').textContent = f.name;
-    document.getElementById('detail-category').textContent = f.category || '';
-
-    const sz = document.getElementById('detail-font-size').value;
-    const typing = document.getElementById('detail-typing');
-    typing.style.fontFamily = `'${f.name}', serif`;
-    typing.style.fontSize = sz + 'px';
-    if (!typing.textContent) typing.textContent = 'Type here...';
-
-    ['detail-upper','detail-lower','detail-misc'].forEach((id, i) => {
-      const el = document.getElementById(id);
-      el.style.fontFamily = `'${f.name}', serif`;
-      el.style.fontSize = sz + 'px';
-      el.textContent = [UPPER, LOWER, MISC][i];
-    });
-
-    // highlight active card
-    document.querySelectorAll('.font-card').forEach(c => c.classList.remove('active'));
-    const cards = document.querySelectorAll('.font-card');
-    const idx = filtered().findIndex(x => x.name === f.name);
-    if (cards[idx]) cards[idx].classList.add('active');
-  }
-
-  // Events
-  document.getElementById('preview-text').addEventListener('input', () => renderGrid(filtered()));
-  document.getElementById('font-size').addEventListener('input', function() {
-    document.getElementById('size-label').textContent = this.value + 'px';
-    renderGrid(filtered());
-  });
-  document.getElementById('search').addEventListener('input', () => renderGrid(filtered()));
-  document.getElementById('category-filter').addEventListener('change', () => renderGrid(filtered()));
-
-  document.getElementById('detail-font-size').addEventListener('input', function() {
-    const sz = this.value + 'px';
-    document.getElementById('detail-size-label').textContent = sz;
-    document.getElementById('detail-typing').style.fontSize = sz;
-    ['detail-upper','detail-lower','detail-misc'].forEach(id => {
-      document.getElementById(id).style.fontSize = sz;
-    });
+    if ((e.metaKey || e.ctrlKey) && e.key === '[') {
+      const inp = document.getElementById('size');
+      inp.value = Math.max(6, +inp.value - 1);
+      applyStyles(); e.preventDefault();
+    }
   });
 
-  document.getElementById('close-detail').addEventListener('click', () => {
-    document.getElementById('detail-panel').classList.remove('open');
-    activeFont = null;
-    document.querySelectorAll('.font-card').forEach(c => c.classList.remove('active'));
+  // ── Word / char count ──────────────────────────────────
+  canvas.addEventListener('input', () => {
+    const text = canvas.innerText.trim();
+    const chars = canvas.innerText.length;
+    const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+    document.getElementById('status-chars').textContent = chars + ' character' + (chars !== 1 ? 's' : '');
+    document.getElementById('status-words').textContent = words + ' word' + (words !== 1 ? 's' : '');
   });
 
-  loadFonts();
+  // ── Focus canvas on load ───────────────────────────────
+  init().then(() => canvas.focus());
 </script>
 </body>
 </html>
