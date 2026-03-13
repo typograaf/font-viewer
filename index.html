@@ -255,6 +255,12 @@
     canvas.innerText = PANGRAMS[idx];
   });
 
+  canvas.addEventListener('keydown', (e) => {
+    if (e.key.length === 1 && !/^[a-z]$/i.test(e.key)) {
+      e.preventDefault();
+    }
+  });
+
   document.getElementById('typeface-select').addEventListener('change', applyStyles);
   document.getElementById('size').addEventListener('input', applyStyles);
   document.getElementById('leading').addEventListener('input', applyStyles);
