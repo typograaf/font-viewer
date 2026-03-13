@@ -22,7 +22,9 @@
       font-size: 20px;
       border: none;
       outline: none;
-      background: transparent;
+      background: #fff;
+      border-radius: 12px;
+      padding: 4px 10px;
       color: #000;
       cursor: pointer;
       width: 100%;
@@ -82,7 +84,7 @@
       -webkit-appearance: none;
       appearance: none;
       width: 100%;
-      height: 1px;
+      height: 2px;
       background: #000;
       outline: none;
       border: none;
@@ -121,8 +123,6 @@
       align-items: center;
       gap: 12px;
       padding-bottom: 10px;
-      border-bottom: 1px solid rgba(0,0,0,0.15);
-      margin-bottom: 2px;
     }
 
     #pangram-btn {
@@ -203,6 +203,8 @@
     if (fonts.length) sel.value = fonts[0].name;
 
     applyStyles();
+    lastPangram = Math.floor(Math.random() * PANGRAMS.length);
+    canvas.innerText = PANGRAMS[lastPangram];
     canvas.focus();
   }
 
