@@ -17,24 +17,15 @@
       overflow: hidden;
     }
 
-    /* ── Top bar: typeface only ── */
-    #topbar {
-      height: 40px;
-      border-bottom: 1px solid #e8e8e8;
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      flex-shrink: 0;
-    }
-
     #typeface-select {
       font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-      font-size: 13px;
+      font-size: 20px;
       border: none;
       outline: none;
       background: transparent;
       color: #000;
       cursor: pointer;
+      width: 100%;
     }
 
     /* ── Canvas ── */
@@ -74,13 +65,13 @@
 
     .slider-row {
       display: grid;
-      grid-template-columns: 72px 1fr 64px;
+      grid-template-columns: 90px 1fr 72px;
       align-items: center;
       gap: 12px;
     }
 
     .slider-label {
-      font-size: 14px;
+      font-size: 20px;
       font-weight: 400;
       color: #000;
       white-space: nowrap;
@@ -118,18 +109,39 @@
     }
 
     .slider-value {
-      font-size: 14px;
+      font-size: 20px;
       color: #000;
       text-align: right;
       white-space: nowrap;
     }
+
+    .panel-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      margin-bottom: 2px;
+    }
+
+    #pangram-btn {
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+      font-size: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #000;
+      padding: 0;
+      opacity: 0.4;
+      transition: opacity 0.15s;
+      white-space: nowrap;
+    }
+
+    #pangram-btn:hover { opacity: 1; }
   </style>
 </head>
 <body>
-
-<div id="topbar">
-  <select id="typeface-select"><option value="">Loading…</option></select>
-</div>
 
 <div
   id="canvas"
@@ -140,6 +152,10 @@
 
 <div id="controls">
   <div class="panel">
+    <div class="panel-top">
+      <select id="typeface-select"><option value="">Loading…</option></select>
+      <button id="pangram-btn" title="Random pangram">&#x21BA;</button>
+    </div>
     <div class="slider-row">
       <span class="slider-label">Size</span>
       <input class="slider" type="range" id="size" min="8" max="200" value="64" step="1" />
@@ -205,6 +221,27 @@
     document.getElementById('leading-val').textContent = leading + ' %';
     document.getElementById('spacing-val').textContent = spacing + ' %';
   }
+
+  const PANGRAMS = [
+    'The quick brown fox jumps over the lazy dog.',
+    'Pack my box with five dozen liquor jugs.',
+    'How vexingly quick daft zebras jump!',
+    'The five boxing wizards jump quickly.',
+    'Sphinx of black quartz, judge my vow.',
+    'Waltz, bad nymph, for quick jigs vex.',
+    'Bright vixens jump; dozy fowl quack.',
+    'Jackdaws love my big sphinx of quartz.',
+    'Fix problem quickly with galvanized jets.',
+    'Jumpy halfling dwarves pick quartz box.',
+  ];
+  let lastPangram = -1;
+
+  document.getElementById('pangram-btn').addEventListener('click', () => {
+    let idx;
+    do { idx = Math.floor(Math.random() * PANGRAMS.length); } while (idx === lastPangram);
+    lastPangram = idx;
+    canvas.innerText = PANGRAMS[idx];
+  });
 
   document.getElementById('typeface-select').addEventListener('change', applyStyles);
   document.getElementById('size').addEventListener('input', applyStyles);
