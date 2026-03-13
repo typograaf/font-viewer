@@ -1,7 +1,7 @@
 [
-  {
-    "name": "Example Font",
-    "file": "ExampleFont.ttf",
-    "category": "Sans-serif"
-  }
+  { "name": "CabriSans Regular", "file": "CabriSans-Regular.otf" },
+  { "name": "Pallas Regular", "file": "Pallas-Regular.otf" },
+  { "name": "ScratchSans Regular", "file": "ScratchSans-Regular.otf" },
+  { "name": "spreeuw", "file": "spreeuw.otf" },
+  { "name": "Slinky", "file": "stumpejochem_67594_4745999_Slinky font regular.otf" }
 ]
