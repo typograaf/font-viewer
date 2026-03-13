@@ -256,7 +256,7 @@
   });
 
   canvas.addEventListener('keydown', (e) => {
-    if (e.key.length === 1 && !/^[a-z]$/i.test(e.key)) {
+    if (e.key.length === 1 && !/^[a-z ]$/i.test(e.key)) {
       e.preventDefault();
     }
   });
