@@ -157,9 +157,59 @@
     }
 
     #pangram-btn:hover { opacity: 0.6; }
+
+    #info-btn {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      background: none;
+      cursor: pointer;
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transition: opacity 0.15s;
+    }
+
+    #info-btn:hover { opacity: 0.6; }
+
+    #info-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.92);
+      z-index: 30;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+    }
+
+    #info-overlay.visible { display: flex; }
+
+    #info-overlay p {
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1.5;
+      max-width: 640px;
+      text-align: center;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
+<button id="info-btn">i</button>
+
+<div id="info-overlay">
+  <p>In deze opdracht ontwerpen jullie een lettertype op basis van jullie (zelf gekozen-) scoutstotem. Gebruik een mix van innerlijke en uiterlijke kenmerken om de vorm te bepalen. Pas dit lettertype nadien toe op een drager naar keuze.</p>
+</div>
 
 <div
   id="canvas"
@@ -303,6 +353,11 @@
   document.getElementById('size').addEventListener('input', applyStyles);
   document.getElementById('leading').addEventListener('input', applyStyles);
   document.getElementById('spacing').addEventListener('input', applyStyles);
+
+  const infoBtn = document.getElementById('info-btn');
+  const infoOverlay = document.getElementById('info-overlay');
+  infoBtn.addEventListener('click', () => infoOverlay.classList.add('visible'));
+  infoOverlay.addEventListener('click', () => infoOverlay.classList.remove('visible'));
 
   init();
 </script>
