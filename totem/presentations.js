@@ -30,4 +30,11 @@ window.PRESENTATIONS = [
     image: "thumbs/04-zahra-lumi.jpg",
     url: "https://www.figma.com/proto/oRYODCeA1G4jzkyYzKtDCS/LUMI-brandbook?node-id=30-92&viewport=1003%2C1809%2C0.21&t=W7FYczGKSg82anOD-1&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=30%3A92&page-id=0%3A1",
   },
+  {
+    product: "Glacuda",
+    name: "Robbe Daems",
+    year: "2026",
+    image: "thumbs/05-glacuda.jpg",
+    url: "https://www.figma.com/proto/XFWlJ5uv9nvUEm9aW42VWk/Glacuda?node-id=1-2&p=f&viewport=138%2C456%2C0.06&t=xViBml1QOede6RRK-1&scaling=contain&content-scaling=fixed&page-id=0%3A1",
+  },
 ];
